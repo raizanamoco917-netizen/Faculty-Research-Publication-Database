@@ -1,162 +1,240 @@
 # Faculty Research & Publication Database
 
-**Project Name:** Faculty Research & Publication Database  
 **Developer:** Raiza D. Namoco  
 **Project Type:** Academic Research Database Management System
 
+---
+
 ## 1. Project Description
 
-The Faculty Research & Publication Database is a database management system designed to organize and manage faculty information, research projects, research areas, publications, journals, and researcher participation in academic institutions.
+The Faculty Research & Publication Database is a database management system that organizes faculty information, research projects, research areas, publications, journals, and researcher participation in an academic institution.
 
-The system uses Google Sheets to store and organize data and AppSheet to provide a user-friendly application for viewing, adding, updating, and managing records. GitHub is used to document the project, its purpose, features, and instructions.
+Google Sheets stores the data, AppSheet provides the application used to view, add, and update records, and GitHub documents the project.
 
-This project aims to make faculty research information easier to access, maintain, and monitor.
+The goal is to make faculty research information easier to access, maintain, and monitor.
+
+---
 
 ## 2. Project Objectives
-
-The objectives of this project are to:
 
 - Organize faculty and department information.
 - Manage research projects and their research areas.
 - Record academic publications and journal information.
-- Track faculty members participating in research projects.
+- Track which faculty members participate in which research projects, and their roles.
 - Maintain relationships between researchers, research projects, and publications.
 - Reduce duplicate and inconsistent data through proper database design.
 - Provide an accessible application for managing research records.
 - Support the monitoring of faculty research and publication activities.
 
+---
+
 ## 3. Main Features
 
-- **Faculty Management** – Store faculty names, email addresses, positions, and department assignments.
-- **Department Management** – Organize faculty members according to their departments.
-- **Research Management** – Record research titles, research areas, statuses, and dates.
-- **Research Area Management** – Classify research projects according to their areas of study.
-- **Researcher Management** – Record faculty participation in research projects and their roles.
-- **Publication Management** – Store publication titles, publication dates, DOI information, and related research.
-- **Journal Management** – Maintain journal names, ISSN numbers, and publisher information.
-- **Data Relationships** – Connect related records through primary keys, foreign keys, and references.
-- **Record Management** – Use AppSheet forms and views to add, display, and update records when configured.
-- **Research Monitoring** – Support reviewing research and publication records.
+- **Faculty Management** – Stores faculty names, email addresses, positions, and department assignments.
+- **Department Management** – Organizes faculty members by department.
+- **Research Management** – Records research titles, research areas, statuses, and start/end dates.
+- **Research Area Management** – Classifies research projects by area of study.
+- **Researcher Management** – Records faculty participation in research projects and their roles.
+- **Publication Management** – Stores publication titles, publication dates, DOIs, and the related research and journal.
+- **Journal Management** – Maintains journal names, ISSNs, and publishers.
+- **Data Relationships** – Connects related records through primary keys, foreign keys, and AppSheet references (Ref columns).
+- **Record Management** – AppSheet forms and views are used to add, display, and update records.
+
+---
 
 ## 4. Technologies Used
 
-### AppSheet
-AppSheet is used to build the application interface. It allows users to interact with the database through forms, tables, detail views, and other configured views without requiring a traditional application codebase.
+| Technology | Purpose |
+|---|---|
+| **AppSheet** | Builds the application interface: forms, table views, detail views, and other views. |
+| **Google Sheets** | Data source that stores the seven tables, one per sheet tab. |
+| **GitHub** | Stores this README and other project files for documentation and sharing. |
 
-### Google Sheets
-Google Sheets serves as the spreadsheet-based data source for storing the database records and organizing the project's tables.
-
-### GitHub
-GitHub is used to store the project's README documentation and other project files, making the project information easier to maintain and share.
+---
 
 ## 5. Database Structure
 
-The database consists of seven main tables.
+The database has **seven tables**.
 
 | Table | Description |
 |---|---|
-| Department | Stores department identification and department names. |
-| Faculty | Stores faculty member information and department assignments. |
-| Research_Area | Stores research area identifiers and area names. |
-| Research | Stores research titles, research areas, statuses, and research dates. |
-| Researcher | Connects faculty members to research projects and records their roles. |
-| Publication | Stores publication titles, dates, DOI information, and related research and journals. |
-| Journal | Stores journal names, ISSN numbers, and publisher information. |
+| Department | Stores department IDs and department names. |
+| Faculty | Stores faculty information and each faculty member's department. |
+| Research_Area | Stores research area IDs and area names. |
+| Research | Stores research titles, research areas, statuses, and dates. |
+| Researcher | Links faculty members to research projects and records their roles (junction table). |
+| Publication | Stores publication titles, dates, DOIs, and the related research and journal. |
+| Journal | Stores journal names, ISSNs, and publishers. |
 
-### Important Relationships
+### Entity-Relationship Diagram (ERD)
 
-- One department can have multiple faculty members.
-- One research area can be associated with multiple research projects.
-- One faculty member can participate in multiple research projects.
-- One research project can involve multiple faculty members.
-- One research project can have multiple publications.
-- One journal can be associated with multiple publications.
+![ERD of the Faculty Research & Publication Database](erd.png)
 
-The **Researcher** table serves as the linking table between Faculty and Research, allowing the database to represent their many-to-many relationship.
+### Relationships
 
-## 6. Database Keys and Data Integrity
+| Relationship | Type | Implemented by |
+|---|---|---|
+| Department → Faculty | One-to-many | `Faculty.Department_ID` |
+| Research_Area → Research | One-to-many | `Research.Research_Area_ID` |
+| Faculty → Researcher | One-to-many | `Researcher.Faculty_ID` |
+| Research → Researcher | One-to-many | `Researcher.Research_ID` |
+| Faculty ↔ Research | Many-to-many | Through the **Researcher** table |
+| Research → Publication | One-to-many | `Publication.Research_ID` |
+| Journal → Publication | One-to-many | `Publication.Journal_ID` |
 
-The database uses identifiers to distinguish records and connect related tables.
+The **Researcher** table is the linking (junction) table between Faculty and Research. It lets one faculty member join many projects and one project include many faculty members, and it stores each person's **Role** on that project.
 
-- **Primary Key (PK):** Uniquely identifies each record in a table.
-- **Foreign Key (FK):** References a related record in another table.
-- **Reference (Ref):** In AppSheet, connects a column to a record in another table.
-- **Data Validation:** Helps ensure that users enter appropriate values into the database.
+---
 
-Examples of identifiers include `Faculty_ID`, `Department_ID`, `Research_ID`, `Publication_ID`, and `Journal_ID`.
+## 6. Keys and Data Integrity
 
-## 7. How to Use the Application
+- **Primary Key (PK):** uniquely identifies each record in a table.
+- **Foreign Key (FK):** a field that refers to a record in another table.
+- **Reference (Ref):** the AppSheet column type that connects a column to a record in another table.
+- **Data validation:** rules that help ensure users enter appropriate values.
 
-### Step 1: Open the Application
-Open the AppSheet application using the application link provided by the developer.
+| Table | Primary Key | Foreign Key(s) |
+|---|---|---|
+| Department | Department_ID | – |
+| Faculty | Faculty_ID | Department_ID |
+| Research_Area | Research_Area_ID | – |
+| Research | Research_ID | Research_Area_ID |
+| Researcher | Researcher_ID | Faculty_ID, Research_ID |
+| Publication | Publication_ID | Research_ID, Journal_ID |
+| Journal | Journal_ID | – |
 
-### Step 2: View the Available Sections
-Navigate through the configured views to access faculty, departments, research areas, research projects, researchers, publications, and journals.
+---
 
-### Step 3: Add a Record
-Open the appropriate section, select the add or new-record option, fill in the required fields, and save the form.
+## 7. Data Dictionary
 
-### Step 4: Update a Record
-Open an existing record, select the edit option if available, modify the necessary information, and save the changes.
+Data types are as shown in the ERD (`varchar` = text, `date` = calendar date).
 
-### Step 5: Review Related Information
-Use the configured references and related-record views to examine connections between faculty members, departments, research projects, and publications.
+### Department
+| Field | Type | Description |
+|---|---|---|
+| Department_ID | varchar | Unique identifier of the department. |
+| Department_Name | varchar | Name of the department. |
 
-### Step 6: Check the Data
-Confirm that records have the correct identifiers and that related records exist before saving or relying on the information.
+### Faculty
+| Field | Type | Description |
+|---|---|---|
+| Faculty_ID | varchar | Unique identifier of the faculty member. |
+| First_Name | varchar | Faculty member's first name. |
+| Last_Name | varchar | Faculty member's last name. |
+| Email | varchar | Faculty member's email address. |
+| Position | varchar | Faculty member's position or job title. |
+| Department_ID | varchar | Department the faculty member belongs to (FK). |
 
-*Note: The exact menu names, available actions, and navigation depend on the current AppSheet configuration and user permissions.*
+### Research_Area
+| Field | Type | Description |
+|---|---|---|
+| Research_Area_ID | varchar | Unique identifier of the research area. |
+| Area_Name | varchar | Name of the research area. |
+
+### Research
+| Field | Type | Description |
+|---|---|---|
+| Research_ID | varchar | Unique identifier of the research project. |
+| Research_Title | varchar | Title of the research project. |
+| Research_Area_ID | varchar | Research area of the project (FK). |
+| Research_Status | varchar | Current status of the project. |
+| Start_Date | date | Date the project started. |
+| End_Date | date | Date the project ended or is expected to end. |
+
+### Researcher
+| Field | Type | Description |
+|---|---|---|
+| Researcher_ID | varchar | Unique identifier of the participation record. |
+| Faculty_ID | varchar | Faculty member who participates (FK). |
+| Research_ID | varchar | Research project participated in (FK). |
+| Role | varchar | Role of the faculty member in the project. |
+
+### Publication
+| Field | Type | Description |
+|---|---|---|
+| Publication_ID | varchar | Unique identifier of the publication. |
+| Publication_Title | varchar | Title of the published work. |
+| Publication_Date | date | Date the work was published. |
+| DOI | varchar | Digital Object Identifier of the work. |
+| Research_ID | varchar | Research project the publication is related to (FK). |
+| Journal_ID | varchar | Journal where the work was published (FK). |
+
+### Journal
+| Field | Type | Description |
+|---|---|---|
+| Journal_ID | varchar | Unique identifier of the journal. |
+| Journal_Name | varchar | Name of the journal. |
+| ISSN | varchar | International Standard Serial Number of the journal. |
+| Publisher | varchar | Organization that publishes the journal. |
+
+---
 
 ## 8. Database Design and Normalization
 
-The database structure is intended to organize information into related tables instead of storing all information in one large table.
+The database splits information into related tables instead of storing everything in one large table.
 
-### First Normal Form (1NF)
-Each field should contain a single value, and each record should be uniquely identifiable.
+**First Normal Form (1NF):** Each field holds a single value and each record is uniquely identifiable. For example, a faculty member's several projects are stored as separate rows in `Researcher`, not as a list in one cell.
 
-### Second Normal Form (2NF)
-The database should satisfy 1NF, and every non-key attribute should depend on the whole primary key. This is particularly important when a table uses a composite primary key.
+**Second Normal Form (2NF):** The tables satisfy 1NF, and every non-key attribute depends on the whole primary key. `Researcher` uses a single-column key (`Researcher_ID`), so no partial dependency can occur, and `Role` describes the whole participation record.
 
-Normalization helps reduce unnecessary duplication and improve data consistency.
+**Third Normal Form (3NF):** No non-key attribute depends on another non-key attribute. For example, `Faculty` stores `Department_ID` rather than `Department_Name`, and `Publication` stores `Journal_ID` rather than the journal's ISSN or publisher. Those details are stored once in `Department` and `Journal`.
 
-## 9. Project Benefits
+Normalization reduces duplication and improves data consistency.
 
-- Provides an organized location for faculty research information.
+---
+
+## 9. How to Use the Application
+
+1. **Open the application** using the AppSheet link in Section 12.
+2. **Browse the views** to reach faculty, departments, research areas, research projects, researchers, publications, and journals.
+3. **Add a record:** open the section, select the add (+) option, fill in the required fields, and save.
+4. **Update a record:** open the record, select edit, change the information, and save.
+5. **Review related information:** open a record and use its related records (for example, a department's faculty or a research project's researchers).
+6. **Check the data:** make sure IDs are correct and that referenced records exist before saving.
+
+> Menu names and available actions depend on the AppSheet configuration and the user's permissions.
+
+---
+
+## 10. Project Benefits
+
+- Provides one organized place for faculty research information.
 - Makes research and publication records easier to manage.
-- Helps identify faculty participation in research projects.
-- Improves consistency through related database tables.
-- Supports more convenient access to academic research information.
+- Shows which faculty members take part in which research projects.
+- Improves consistency through related tables.
 - Provides a foundation for reviewing research and publication activity.
 
-## 10. Project Limitations
+---
 
-- The application depends on the configured AppSheet application and its connected data source.
-- Data accuracy depends on the information entered by authorized users.
-- Available functions depend on the implemented views, actions, validation rules, and access permissions.
-- Dashboard summaries, automated notifications, advanced reports, and security controls are available only if they have been configured.
+## 11. Limitations and Future Improvements
 
-## 11. Future Improvements
+### Current limitations
+- Each publication is linked to only **one** research project (`Publication.Research_ID`). A publication that comes from several projects would need an additional linking table.
+- There is no direct Publication–Faculty (author) table, so co-authorship is represented indirectly through researchers on the same project.
+- `Research_Status` is a text field in the ERD. Using a fixed list of values (an Enum) would keep statuses consistent.
+- Google Sheets does not enforce keys or references by itself, so data accuracy depends on AppSheet settings and the people entering data.
+- The `Researcher` table could be named more clearly (for example, `Research_Participation`) because it stores participation records, not researcher profiles.
 
-Possible future improvements include:
+### Possible future improvements
+- Add a `Publication_Author` table to record authors of each publication directly.
+- Add a research and publication dashboard with status and count summaries.
+- Add search and filter tools.
+- Improve input validation and duplicate prevention (for example, End_Date not earlier than Start_Date, and no duplicate faculty–research pairs).
+- Improve user access controls and data security.
+- Provide exportable reports for academic monitoring.
 
-- Adding a research and publication dashboard.
-- Creating search and filtering tools.
-- Adding publication and research-status summaries.
-- Improving input validation and duplicate prevention.
-- Adding automated notifications for research updates.
-- Improving user access controls and data security.
-- Providing exportable reports for academic monitoring.
+These are suggestions and are not part of the current application unless stated in Section 3.
 
-These improvements are suggestions and should not be considered implemented unless they are available in the current application.
+---
 
 ## 12. Project Links
 
 - **AppSheet Application:** [Open the Faculty Research & Publication Database](https://www.appsheet.com/Template/AppDef?appName=FacultyandPublication-756053880&utm_source=share_app_link)
-- **GitHub Repository:** Add your GitHub repository URL here.
-- **Google Sheets Data Source:** Add the appropriate Google Sheets link here if you want to share it and have permission to do so.
+
+---
 
 ## 13. Conclusion
 
-The Faculty Research & Publication Database provides a structured approach to managing faculty information, research projects, researcher participation, academic publications, and journal records. By combining AppSheet, Google Sheets, and GitHub, the project demonstrates how a relational database design can support the organization and management of academic research information.
+The Faculty Research & Publication Database provides a structured way to manage faculty information, research projects, researcher participation, academic publications, and journal records. By combining AppSheet, Google Sheets, and GitHub, the project shows how a relational database design can support the organization and management of academic research information.
 
-The project also applies fundamental database concepts, including primary keys, foreign keys, relationships, and normalization, to help maintain consistent and organized records.
+The project applies fundamental database concepts, including primary keys, foreign keys, relationships, and normalization, to keep records consistent and organized.
